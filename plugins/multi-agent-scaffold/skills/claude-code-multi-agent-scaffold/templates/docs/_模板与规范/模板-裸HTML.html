@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>文档标题 · 副标题</title>
+<link rel="stylesheet" href="common.css">
+</head>
+<body>
+<div class="wrap">
+
+  <!-- ===== 头图 hero ===== -->
+  <div class="hero">
+    <span class="tag"><svg class="icon" viewBox="64 64 896 896" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M864 736c0-111.6-65.4-208-160-252.9V317.3c0-15.1-5.3-29.7-15.1-41.2L536.5 95.4C530.1 87.8 521 84 512 84s-18.1 3.8-24.5 11.4L335.1 276.1a63.97 63.97 0 00-15.1 41.2v165.8C225.4 528 160 624.4 160 736h156.5c-2.3 7.2-3.5 15-3.5 23.8 0 22.1 7.6 43.7 21.4 60.8a97.2 97.2 0 0043.1 30.6c23.1 54 75.6 88.8 134.5 88.8 29.1 0 57.3-8.6 81.4-24.8 23.6-15.8 41.9-37.9 53-64a97 97 0 0043.1-30.5 97.52 97.52 0 0021.4-60.8c0-8.4-1.1-16.4-3.1-23.8H864zM762.3 621.4c9.4 14.6 17 30.3 22.5 46.6H700V558.7a211.6 211.6 0 0162.3 62.7zM388 483.1V318.8l124-147 124 147V668H388V483.1zM239.2 668c5.5-16.3 13.1-32 22.5-46.6 16.3-25.2 37.5-46.5 62.3-62.7V668h-84.8zm388.9 116.2c-5.2 3-11.2 4.2-17.1 3.4l-19.5-2.4-2.8 19.4c-5.4 37.9-38.4 66.5-76.7 66.5-38.3 0-71.3-28.6-76.7-66.5l-2.8-19.5-19.5 2.5a27.7 27.7 0 01-17.1-3.5c-8.7-5-14.1-14.3-14.1-24.4 0-10.6 5.9-19.4 14.6-23.8h231.3c8.8 4.5 14.6 13.3 14.6 23.8-.1 10.2-5.5 19.6-14.2 24.5zM464 400a48 48 0 1096 0 48 48 0 10-96 0z"/></svg> [标签文字]</span>
+    <h1>文档主标题</h1>
+    <p>一句话摘要：本段落概括文档要解决的问题与结论，控制在两行以内。</p>
+    <div class="meta">
+      <span><svg class="icon" viewBox="64 64 896 896" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M880 184H712v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H384v-64c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v64H144c-17.7 0-32 14.3-32 32v664c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V216c0-17.7-14.3-32-32-32zm-40 656H184V460h656v380zM184 392V256h128v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h256v48c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-48h128v136H184z"/></svg> 2026-09-03</span>
+      <span><svg class="icon" viewBox="64 64 896 896" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M866.9 169.9L527.1 54.1C523 52.7 517.5 52 512 52s-11 .7-15.1 2.1L157.1 169.9c-8.3 2.8-15.1 12.4-15.1 21.2v482.4c0 8.8 5.7 20.4 12.6 25.9L499.3 968c3.5 2.7 8 4.1 12.6 4.1s9.2-1.4 12.6-4.1l344.7-268.6c6.9-5.4 12.6-17 12.6-25.9V191.1c.2-8.8-6.6-18.3-14.9-21.2zM810 654.3L512 886.5 214 654.3V226.7l298-101.6 298 101.6v427.6zm-405.8-201c-3-4.1-7.8-6.6-13-6.6H336c-6.5 0-10.3 7.4-6.5 12.7l126.4 174a16.1 16.1 0 0026 0l212.6-292.7c3.8-5.3 0-12.7-6.5-12.7h-55.2c-5.1 0-10 2.5-13 6.6L468.9 542.4l-64.7-89.1z"/></svg> 适用版本 v1.0</span>
+    </div>
+  </div>
+
+  <!-- ===== 目录 toc ===== -->
+  <div class="toc">
+    <h2><svg class="icon" viewBox="64 64 896 896" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M912 192H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 284H328c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h584c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM104 228a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0zm0 284a56 56 0 10112 0 56 56 0 10-112 0z"/></svg> 目录</h2>
+    <ol>
+      <li><a href="#s1">章节一</a></li>
+      <li><a href="#s2">章节二</a></li>
+      <li><a href="#s3">章节三</a></li>
+    </ol>
+  </div>
+
+  <!-- ===== 章节一 ===== -->
+  <section id="s1">
+    <div class="sec">
+      <h2><span class="num">1</span>章节一标题</h2>
+      <p class="lead">章节引导语：简要说明本章要讲什么。</p>
+
+      <h3><svg class="icon" viewBox="64 64 896 896" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path fill="currentColor" d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg>小节标题</h3>
+      <p>正文段落。行内代码用 <code class="inline">code.inline</code>，强调用 <strong>strong</strong>。</p>
+
+      <ul>
+        <li>无序列表项</li>
+        <li>无序列表项</li>
+      </ul>
+
+      <ol>
+        <li>有序列表项</li>
+        <li>有序列表项</li>
+      </ol>
+
+      <!-- 提示框（tip/warn/error/info 四选一） -->
+      <div class="box info">
+        <span class="bt"><svg class="icon" viewBox="64 64 896 896" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z"/><path fill="currentColor" d="M464 336a48 48 0 1096 0 48 48 0 10-96 0zm72 112h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V456c0-4.4-3.6-8-8-8z"/></svg>提示标题</span>
+        提示内容文字。
+      </div>
+
+      <div class="box warn">
+        <span class="bt"><svg class="icon" viewBox="64 64 896 896" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="currentColor" d="M464 720a48 48 0 1096 0 48 48 0 10-96 0zm16-304v184c0 4.4 3.6 8 8 8h48c4.4 0 8-3.6 8-8V416c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8zm475.7 440l-416-720c-6.2-10.7-16.9-16-27.7-16s-21.6 5.3-27.7 16l-416 720C56 877.4 71.4 904 96 904h832c24.6 0 40-26.6 27.7-48zm-783.5-27.9L512 239.9l339.8 588.2H172.2z"/></svg>警告标题</span>
+        警告内容文字。
+      </div>
+
+      <!-- 表格 -->
+      <table>
+        <tr><th>列一</th><th>列二</th><th>列三</th></tr>
+        <tr><td>单元格</td><td>单元格</td><td>单元格</td></tr>
+        <tr><td>单元格</td><td><code class="inline">code</code></td><td>单元格</td></tr>
+      </table>
+
+      <!-- 结论框 -->
+      <div class="verdict">
+        <div class="icon">!</div>
+        <div>
+          <b>结论标题</b>
+          <p>结论正文。</p>
+        </div>
+      </div>
+
+      <!-- 徽章 -->
+      <span class="badge hard">高难度</span>
+      <span class="badge mid">中等</span>
+      <span class="badge easy">简单</span>
+      <span class="badge blue">蓝色</span>
+      <span class="badge purple">紫色</span>
+
+      <!-- 评分条 -->
+      <div class="meter">
+        <div class="label">评分项</div>
+        <div class="bar"><div class="fill" style="width:80%;background:#17a34a"></div></div>
+        <div class="val">80%</div>
+      </div>
+
+      <!-- 代码块 -->
+      <pre><code># 这里是代码块
+docker compose up -d</code></pre>
+    </div>
+  </section>
+
+  <!-- ===== 章节二：步骤流示例 ===== -->
+  <section id="s2">
+    <div class="sec">
+      <h2><span class="num">2</span>步骤流示例</h2>
+      <p class="lead">两种步骤流二选一。</p>
+
+      <h3>纵向步骤（方案/流程类）</h3>
+      <ol class="steps">
+        <li><b>第一步标题</b><span class="desc">第一步的说明文字。</span></li>
+        <li><b>第二步标题</b><span class="desc">第二步的说明文字。</span></li>
+        <li><b>第三步标题</b><span class="desc">第三步的说明文字。</span></li>
+      </ol>
+
+      <h3>卡片步骤（教程类）</h3>
+      <div class="steps">
+        <div class="step"><b>第一步标题</b><p>第一步的说明文字。</p></div>
+        <div class="step"><b>第二步标题</b><p>第二步的说明文字。</p></div>
+        <div class="step"><b>第三步标题</b><p>第三步的说明文字。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 章节三：项目卡片 + 参考来源 ===== -->
+  <section id="s3">
+    <div class="sec">
+      <h2><span class="num">3</span>项目卡片与参考</h2>
+      <p class="lead">用于调研类文档。</p>
+
+      <!-- 项目卡片 -->
+      <div class="repo">
+        <div class="logo" style="background:#6d28d9">N</div>
+        <div>
+          <div class="hd"><b>项目名称</b><span class="badge blue">标签</span></div>
+          <div class="desc">项目的一句话描述。</div>
+          <div class="tags">
+            <span class="badge easy">Go</span>
+            <span class="badge purple">开源</span>
+          </div>
+          <a class="repolink" href="https://github.com/xxx/xxx" target="_blank">github.com/xxx/xxx</a>
+        </div>
+      </div>
+
+      <!-- 参考来源 -->
+      <ul class="ref">
+        <li>[1] 来源标题 — 链接地址</li>
+        <li>[2] 来源标题 — 链接地址</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>文档名称 · 生成日期 2026-09-03</footer>
+
+</div>
+</body>
+</html>

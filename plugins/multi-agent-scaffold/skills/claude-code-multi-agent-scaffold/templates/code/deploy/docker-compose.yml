@@ -1,0 +1,37 @@
+# 本地编排：MySQL + API + Web
+# 用法：docker compose up -d --build
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: your_password
+      MYSQL_DATABASE: your_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  api:
+    build:
+      context: .
+      dockerfile: src/backend/api/Dockerfile.api
+    depends_on:
+      - mysql
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=mysql;Port=3306;Database=your_db;Uid=root;Pwd=your_password;
+    ports:
+      - "8080:8080"
+
+  web:
+    build:
+      context: .
+      dockerfile: src/backend/web/Dockerfile.web
+    depends_on:
+      - api
+    ports:
+      - "80:80"
+
+volumes:
+  mysql-data:

@@ -1,0 +1,49 @@
+examples:
+  - id: scaffold-new-project
+    title:
+      zh: 初始化 Claude Code 多 Agent 项目
+      en: Scaffold a Claude Code Multi-Agent Project
+    description:
+      zh: 一键生成 21 个 Agent + 命令 + hooks + 开发规范 + 项目文档的完整脚手架
+      en: Generate a full scaffold with 21 agents, commands, hooks, standards, and project docs
+    prompt:
+      zh: |-
+        请初始化一个 Claude Code 多 Agent 项目：
+
+        目标目录：{{目标目录}}
+        项目名称：{{项目名称，中文显示名}}
+        代码工程名：{{代码工程名，英文 PascalCase，如 Ecommerce}}
+        项目描述：{{一句话描述}}
+
+        请生成完整的 .claude/（21 个 Agent、命令、hooks、开发规范）、CLAUDE.md、docs/00-项目文档/ 文档模板，并用 dotnet new / npm create vite 生成带正确命名的 src/backend 前后端代码工程。
+      en: |-
+        Please scaffold a Claude Code multi-agent project:
+
+        Target directory: {{target directory}}
+        Project name: {{project name, Chinese display name}}
+        Code name: {{code name, PascalCase, e.g. Ecommerce}}
+        Project description: {{one-line description}}
+
+        Generate the full .claude/ (21 agents, commands, hooks, standards), CLAUDE.md, docs/00-项目文档/ templates, and src/backend code projects (dotnet new API + npm create vite web) with correct naming.
+  - id: setup-agent-team
+    title:
+      zh: 搭建 AI 工程团队
+      en: Set Up an AI Engineering Team
+    description:
+      zh: 按"需求分析→任务规划→需求评审→开发实施→测试修复"五阶段搭建多 Agent 工程团队
+      en: Build a multi-agent engineering team across five lifecycle phases
+    prompt:
+      zh: |-
+        帮我搭建一个 Claude Code 多 Agent 工程团队，覆盖需求分析、任务规划、需求评审、开发实施、测试修复五个阶段。
+
+        项目：{{项目名称}}
+        技术栈：{{技术栈，默认 .NET 8 + Vue 3}}
+
+        请创建 Agent 定义、命令、hooks，并遵循"角色模板与业务上下文分离"原则。
+      en: |-
+        Help me build a Claude Code multi-agent engineering team across five phases: requirements, planning, requirement review, development, and test/bug-fixing.
+
+        Project: {{project name}}
+        Tech stack: {{tech stack, defaults to .NET 8 + Vue 3}}
+
+        Create agent definitions, commands, and hooks following the role-template / business-context separation principle.

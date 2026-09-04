@@ -1,0 +1,23 @@
+# 统一行尾策略：仓库内一律 LF（与 .editorconfig end_of_line = lf 一致）
+# Windows 工作区检出时由 git 转换为 CRLF（依赖个人 core.autocrlf=true）
+# 提交时统一归一化为 LF，消除 "LF will be replaced by CRLF" 警告混乱
+
+* text=auto eol=lf
+
+# Windows 专用脚本必须保持 CRLF
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# 二进制文件不做任何转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.dll binary
+*.exe binary
+*.woff binary
+*.woff2 binary

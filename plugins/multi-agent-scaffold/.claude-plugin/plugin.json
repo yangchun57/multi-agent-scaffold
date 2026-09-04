@@ -1,0 +1,8 @@
+{
+  "name": "multi-agent-scaffold",
+  "description": "Claude Code 多 Agent 软件工程团队：需求分析/任务规划/需求评审/开发实施/测试修复 五阶段 21 个专职 Agent、9 个斜杠命令、多租户护栏 hooks，并附带新项目脚手架生成器 skill。",
+  "version": "1.0.0",
+  "author": {
+    "name": "yangchun57"
+  }
+}

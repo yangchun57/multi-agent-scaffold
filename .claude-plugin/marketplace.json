@@ -1,0 +1,17 @@
+{
+  "name": "multi-agent-scaffold",
+  "owner": {
+    "name": "yangchun57"
+  },
+  "metadata": {
+    "description": "Claude Code 多 Agent 软件工程团队脚手架：21 Agent / 9 命令 / 护栏 hooks + 一键生成器"
+  },
+  "plugins": [
+    {
+      "name": "multi-agent-scaffold",
+      "source": "./plugins/multi-agent-scaffold",
+      "description": "安装即得 21 个专职 Agent、9 个斜杠命令与多租户护栏 hooks；附带可一键生成 .NET8+Vue3 多租户项目脚手架的 skill",
+      "version": "1.0.0"
+    }
+  ]
+}

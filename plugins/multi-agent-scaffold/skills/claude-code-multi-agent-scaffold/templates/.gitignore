@@ -1,0 +1,12 @@
+bin/
+obj/
+node_modules/
+dist/
+.vs/
+.idea/
+logs/
+*.log
+.env
+.env.local
+.DS_Store
+Thumbs.db

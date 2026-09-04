@@ -1,0 +1,18 @@
+# 后端 API 多阶段构建
+# 构建上下文：仓库根目录（docker build -f src/backend/api/Dockerfile.api .）
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY ["src/backend/api/{{CodeName}}.Api/{{CodeName}}.Api.csproj", "{{CodeName}}.Api/"]
+COPY ["src/backend/api/{{CodeName}}.Service/{{CodeName}}.Service.csproj", "{{CodeName}}.Service/"]
+COPY ["src/backend/api/{{CodeName}}.Model/{{CodeName}}.Model.csproj", "{{CodeName}}.Model/"]
+COPY ["src/backend/api/{{CodeName}}.Common/{{CodeName}}.Common.csproj", "{{CodeName}}.Common/"]
+RUN dotnet restore "src/backend/api/{{CodeName}}.Api/{{CodeName}}.Api.csproj"
+COPY src/backend/api/ .
+RUN dotnet publish "src/backend/api/{{CodeName}}.Api/{{CodeName}}.Api.csproj" -c Release -o /app/publish
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/publish .
+EXPOSE 8080
+ENTRYPOINT ["dotnet", "{{CodeName}}.Api.dll"]

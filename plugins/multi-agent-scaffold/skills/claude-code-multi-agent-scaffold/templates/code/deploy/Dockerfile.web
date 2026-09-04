@@ -1,0 +1,13 @@
+# 前端 Web 多阶段构建（Vite 构建 + Nginx 托管）
+# 构建上下文：仓库根目录（docker build -f src/backend/web/Dockerfile.web .）
+
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY src/backend/web/package*.json ./
+RUN npm ci
+COPY src/backend/web/ .
+RUN npm run build
+
+FROM nginx:alpine AS runtime
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
