@@ -50,7 +50,8 @@ python ~/.qwenworkcn/skills/claude-code-multi-agent-scaffold/scripts/scaffold.py
 <项目根目录>/
 ├── CLAUDE.md                     ← 项目集体记忆（含 TODO，需填写）
 ├── .claude/                      ← 21 个 Agent + 9 个命令 + hooks + 7 份规范
-├── .github/                      ← CI workflow + dependabot
+├── .github/                      ← CI workflow（复用 ci.sh）+ dependabot
+├── scripts/ci.sh + .githooks/    ← 本地优先质量门禁（fmt+build+test+前端构建；pre-push 推送前自动跑）
 ├── docs/00-项目文档/              ← 文档模板 + 变更/经验记录
 ├── src/backend/
 │   ├── api/                      ← 后端工程（dotnet=.NET 8 分层+迁移+集成测试基类；python=FastAPI+SQLAlchemy 结构骨架）

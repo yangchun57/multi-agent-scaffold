@@ -88,7 +88,7 @@
 
 1. **数据库迁移**：表结构变更必须通过 `src/backend/api/sql/migrations/V{三位序号}__{描述}.sql` 版本化脚本（只增不改、顺序执行、幂等优先），禁止手工改库，详见该目录 README
 2. **前端类型生成**：业务实体 TS 类型优先 `cd src/backend/web && npm run gen:api` 从后端 Swagger 自动生成（swagger-typescript-api），生成物为唯一事实源；手写仅限 Form/Query 等前端形态
-3. **CI**：push/PR 自动触发 `.github/workflows/ci.yml`（后端 build+test、前端 build），本地提交前先确保可通过
+3. **质量门禁（本地为主、远端为辅）**：本地 `bash scripts/ci.sh`（后端 fmt+build+test + 前端构建）是单一事实源；`.githooks/pre-push` 钩子在 `git push` 前自动跑它，`.claude` 的 pre-commit 钩子在 AI 提交前也跑后端测试。远端 `.github/workflows/ci.yml` 仅复用同一脚本作兜底，不作为唯一防线。禁止用 `--no-verify` 绕过门禁。
 
 ## 分支与质量约定
 
@@ -118,5 +118,6 @@
 - 后端测试：`{{BACKEND_TEST}}`
 - 前端启动：`cd src/backend/web && npm run dev`
 - 前端构建：`cd src/backend/web && npm run build`
+- 本地质量门禁：`bash scripts/ci.sh`（提交/推送前跑；pre-push 钩子自动执行）
 
 <!-- 若所选栈的命令不同（如 uni-app 用 npm run dev:h5），请就地修改。 -->
