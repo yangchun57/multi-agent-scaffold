@@ -1,0 +1,17 @@
+{
+  "name": "{{PROJECT_NAME}}",
+  "appid": "",
+  "description": "",
+  "versionName": "0.1.0",
+  "versionCode": "1",
+  "transformPx": false,
+  "h5": {
+    "router": { "mode": "hash", "base": "./" },
+    "devServer": { "https": false }
+  },
+  "mp-weixin": {
+    "appid": "",
+    "setting": { "urlCheck": false },
+    "usingComponents": true
+  }
+}

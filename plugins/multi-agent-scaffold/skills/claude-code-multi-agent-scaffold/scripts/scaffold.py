@@ -66,6 +66,7 @@ BACKENDS = {
             "{{BACKEND_SHORT}}": ".NET 8",
             "{{ORM}}": "SqlSugar",
             "{{ENVELOPE}}": "ApiResult<T> / PageResult<T>",
+            "{{BACKEND_ORIGIN}}": "http://127.0.0.1:5157",
             "{{FIELD_MAPPING}}": "数据库 snake_case → 后端 C# PascalCase（`[SugarColumn(ColumnName=...)]` 映射）→ 前端 camelCase",
             "{{BACKEND_BUILD}}": "cd src/backend/api && dotnet build",
             "{{BACKEND_TEST}}": "cd src/backend/api && dotnet test",
@@ -81,7 +82,8 @@ BACKENDS = {
             "{{BACKEND_STACK}}": "Python 3.10+ + FastAPI + SQLAlchemy 2.0 + Pydantic v2 + pydantic-settings + PyJWT + uvicorn + pytest",
             "{{BACKEND_SHORT}}": "Python (FastAPI)",
             "{{ORM}}": "SQLAlchemy",
-            "{{ENVELOPE}}": "ApiResult / PageResult（app/schemas/common.py）",
+            "{{ENVELOPE}}": "RESTful：业务错误 raise BusinessException（HTTP 状态码），列表分页 Page{items,total,page,size}",
+            "{{BACKEND_ORIGIN}}": "http://127.0.0.1:8000",
             "{{FIELD_MAPPING}}": "数据库 snake_case → 后端 snake_case（SQLAlchemy 列/属性）→ 前端 camelCase（Pydantic 出参 alias / alias_generator）",
             "{{BACKEND_BUILD}}": "cd src/backend/api && python -m compileall app",
             "{{BACKEND_TEST}}": "cd src/backend/api && pytest",
@@ -116,11 +118,12 @@ FRONTS = {
 }
 
 ALWAYS_STANDARDS = ["通用开发规范.md"]
+TEXT_EXT = (".py", ".ts", ".vue", ".js", ".json", ".scss", ".css", ".md", ".ini", ".txt", ".example")
 
 
 # ============ 通用工具 ============
 def copy_tree(src, dst):
-    shutil.copytree(src, dst, dirs_exist_ok=True)
+    shutil.copytree(src, dst, dirs_exist_ok=True, ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
 
 
 def render_text(content, mapping):
@@ -138,6 +141,27 @@ def write(path, content):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8", newline="\n") as f:
         f.write(content)
+
+
+def copy_tree_render(src_dir, dst_dir, mapping):
+    """递归拷贝模板目录，文本文件按 mapping 渲染占位符；跳过 __pycache__/.pyc。"""
+    for base, dirs, files in os.walk(src_dir):
+        dirs[:] = [d for d in dirs if d != "__pycache__"]
+        rel = os.path.relpath(base, src_dir)
+        target_base = dst_dir if rel == "." else os.path.join(dst_dir, rel)
+        os.makedirs(target_base, exist_ok=True)
+        for fn in files:
+            if fn.endswith(".pyc"):
+                continue
+            src = os.path.join(base, fn)
+            dst = os.path.join(target_base, fn)
+            if fn.endswith(TEXT_EXT):
+                try:
+                    write(dst, render(src, mapping))
+                    continue
+                except (UnicodeDecodeError, OSError):
+                    pass
+            shutil.copy2(src, dst)
 
 
 def to_kebab(name):
@@ -277,223 +301,14 @@ def init_api_dotnet(target, code_name):
     print(f"  [OK] API 工程 {code_name} 生成完成（.NET 8 分层 + 迁移目录）")
 
 
-def init_api_python(target, code_name):
-    """按 Python 后台开发规范生成 FastAPI + SQLAlchemy 结构骨架。"""
+def init_api_python(target, code_name, mapping):
+    """按 Python 后台开发规范生成 FastAPI + SQLAlchemy 基础设施（租户上下文/过滤器、JWT 依赖、异常处理、conftest）。"""
     api = os.path.join(target, "src", "backend", "api")
-    app = os.path.join(api, "app")
-    pkgs = ["", "api", "api/routes", "schemas", "models", "services", "core", "tasks"]
-    for p in pkgs:
-        d = os.path.join(app, p) if p else app
-        os.makedirs(d, exist_ok=True)
-        write(os.path.join(d, "__init__.py"), "")
-    for p in ["tests", "scripts"]:
-        d = os.path.join(api, p)
-        os.makedirs(d, exist_ok=True)
-        write(os.path.join(d, "__init__.py"), "")
+    tpl = os.path.join(TEMPLATE_DIR, "code", "api-python")
+    copy_tree_render(tpl, api, mapping)
     os.makedirs(os.path.join(api, "data"), exist_ok=True)
-
-    write(os.path.join(api, "requirements.txt"),
-"""fastapi>=0.115
-uvicorn[standard]>=0.30
-sqlalchemy>=2.0
-pydantic>=2.7
-pydantic-settings>=2.3
-PyJWT>=2.8
-passlib>=1.7.4
-httpx>=0.27
-pytest>=8.2
-python-multipart>=0.0.9
-""")
-
-    write(os.path.join(app, "config.py"),
-'''"""全局配置（pydantic-settings）与路径常量。"""
-from pathlib import Path
-from pydantic_settings import BaseSettings, SettingsConfigDict
-
-BACKEND_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BACKEND_DIR / "data"
-
-
-class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=BACKEND_DIR / ".env", extra="ignore")
-
-    APP_NAME: str = "{name}"
-    DATABASE_URL: str = "sqlite:///" + str(DATA_DIR / "app.db")
-    JWT_SECRET: str = "change-me"
-    JWT_ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 120
-
-
-settings = Settings()
-'''.format(name=code_name))
-
-    write(os.path.join(app, "database.py"),
-'''"""engine / SessionLocal / get_db 依赖。"""
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-
-from app.config import settings
-from app.models.base import Base
-
-engine = create_engine(settings.DATABASE_URL, pool_pre_ping=True, future=True)
-SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False, future=True)
-
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-''')
-
-    write(os.path.join(app, "models", "base.py"),
-'''"""ORM 基类与公共 Mixin。"""
-from datetime import datetime
-
-from sqlalchemy import BigInteger, DateTime, func
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-
-
-class Base(DeclarativeBase):
-    pass
-
-
-class TenantMixin:
-    """多租户红线：所有业务表继承本 Mixin，携带 tenant_id。"""
-
-    tenant_id: Mapped[int] = mapped_column(BigInteger, nullable=False, index=True)
-
-
-class TimestampMixin:
-    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)
-''')
-
-    write(os.path.join(app, "schemas", "common.py"),
-'''"""统一响应信封：ApiResult / PageResult。"""
-from typing import Generic, List, TypeVar
-
-from pydantic import BaseModel, ConfigDict
-
-T = TypeVar("T")
-
-
-class ApiResult(BaseModel, Generic[T]):
-    code: int = 0
-    message: str = "ok"
-    data: T | None = None
-
-    @classmethod
-    def ok(cls, data: T | None = None) -> "ApiResult[T]":
-        return cls(code=0, message="ok", data=data)
-
-
-class PageResult(BaseModel, Generic[T]):
-    """分页信封：items / total / pageIndex / pageSize。"""
-
-    model_config = ConfigDict(populate_by_name=True)
-
-    items: List[T] = []
-    total: int = 0
-    page_index: int = 1
-    page_size: int = 20
-
-
-class CamelModel(BaseModel):
-    """前端 camelCase 出参基类：DB/后端 snake_case → 响应 camelCase。"""
-
-    model_config = ConfigDict(alias_generator=lambda s: "".join(
-        w.capitalize() if i else w for i, w in enumerate(s.split("_"))),
-        populate_by_name=True, from_attributes=True)
-''')
-
-    write(os.path.join(app, "core", "security.py"),
-'''"""安全能力：JWT 签发/校验、密码哈希。"""
-from datetime import datetime, timedelta, timezone
-
-import jwt
-from passlib.context import CryptContext
-
-from app.config import settings
-
-pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
-
-
-def hash_password(raw: str) -> str:
-    return pwd_context.hash(raw)
-
-
-def verify_password(raw: str, hashed: str) -> bool:
-    return pwd_context.verify(raw, hashed)
-
-
-def create_access_token(subject: str, tenant_id: int, expires_minutes: int | None = None) -> str:
-    exp = datetime.now(timezone.utc) + timedelta(minutes=expires_minutes or settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-    payload = {"sub": subject, "tenant_id": tenant_id, "exp": exp}
-    return jwt.encode(payload, settings.JWT_SECRET, algorithm=settings.JWT_ALGORITHM)
-''')
-
-    write(os.path.join(app, "main.py"),
-'''"""应用入口：日志装配、中间件、路由挂载、健康检查。"""
-from fastapi import FastAPI
-
-from app.api.routes.health import router as health_router
-from app.config import settings
-
-app = FastAPI(title=settings.APP_NAME)
-
-app.include_router(health_router, prefix="/api")
-
-
-@app.get("/health", tags=["health"])
-def health() -> dict:
-    return {"status": "ok", "app": settings.APP_NAME}
-''')
-
-    write(os.path.join(app, "api", "routes", "health.py"),
-'''"""健康检查路由示例。"""
-from fastapi import APIRouter
-
-router = APIRouter(tags=["health"])
-
-
-@router.get("/ping")
-def ping() -> dict:
-    return {"pong": True}
-''')
-
-    write(os.path.join(api, "pytest.ini"),
-"""[pytest]
-pythonpath = .
-testpaths = tests
-""")
-
-    write(os.path.join(api, "conftest.py"),
-'''"""pytest 公共 fixture：TestClient。"""
-import pytest
-from fastapi.testclient import TestClient
-
-from app.main import app
-
-
-@pytest.fixture()
-def client() -> TestClient:
-    return TestClient(app)
-''')
-
-    write(os.path.join(api, ".env.example"),
-"""APP_NAME=App
-DATABASE_URL=sqlite:///./data/app.db
-JWT_SECRET=change-me-in-prod
-ACCESS_TOKEN_EXPIRE_MINUTES=120
-""")
-
-    # gitignore 追加（data/.env/__pycache__）
-    gi = os.path.join(api, ".gitignore")
-    write(gi, "__pycache__/\n*.pyc\n.pytest_cache/\ndata/\n.env\n")
-
-    print(f"  [OK] API 工程 {code_name} 生成完成（FastAPI + SQLAlchemy 结构骨架）")
+    write(os.path.join(api, ".gitignore"), "__pycache__/\n*.pyc\n.pytest_cache/\ndata/\n.env\n.venv/\n")
+    print(f"  [OK] API 工程 {code_name} 生成完成（FastAPI + SQLAlchemy + 租户基础设施）")
 
 
 # ============ 前端工程 ============
@@ -539,36 +354,17 @@ def init_web_vue(target, code_name, name, desc):
     print(f"  [OK] Web 工程 {kebab} 生成完成（Vue 3 + Element Plus）")
 
 
-def init_web_uniapp(target, code_name, name, desc):
-    """优先 degit 官方 uni-preset-vue#vite-ts；不可用/失败则降级写结构骨架。"""
+def init_web_uniapp(target, code_name, name, desc, mapping):
+    """优先 degit 官方 uni-preset-vue#vite-ts，再用 uni-app 基础设施模板覆盖。无网络则仅写骨架。"""
     web_dir = os.path.join(target, "src", "backend", "web")
     os.makedirs(web_dir, exist_ok=True)
-    ok = run(["npx", "--yes", "degit", "dcloudio/uni-preset-vue#vite-ts", web_dir, "--force"], web_dir,
-             "degit 初始化 uni-app（Vue3 + Vite + TS 官方预设）")
-    has_pkg = os.path.isfile(os.path.join(web_dir, "package.json"))
-    if not has_pkg:
-        print("  [降级] 未能拉取官方预设（可能无网络），生成最小结构骨架，稍后可手动 `npx degit dcloudio/uni-preset-vue#vite-ts .` 覆盖")
-        write(os.path.join(web_dir, "package.json"), json.dumps({
-            "name": to_kebab(code_name), "version": "0.1.0", "private": True,
-            "scripts": {"dev:h5": "uni", "build:h5": "uni build", "dev:mp-weixin": "uni -p mp-weixin",
-                        "build:mp-weixin": "uni build -p mp-weixin"},
-            "dependencies": {"@dcloudio/uni-app": "3.0.0-4020920240930001", "vue": "^3.4.21", "pinia": "^2.1.7"},
-            "devDependencies": {"@dcloudio/vite-plugin-uni": "3.0.0-4020920240930001", "typescript": "^5.4.0", "vite": "^5.2.0"},
-        }, ensure_ascii=False, indent=2))
-    for d in ["src/pages/index", "src/api", "src/stores", "src/types", "src/utils"]:
-        os.makedirs(os.path.join(web_dir, *d.split("/")), exist_ok=True)
-    pages = os.path.join(web_dir, "src", "pages.json")
-    if not os.path.exists(pages):
-        write(pages, json.dumps({
-            "pages": [{"path": "pages/index/index", "style": {"navigationBarTitleText": name}}],
-            "globalStyle": {"navigationBarTextStyle": "black", "navigationBarTitleText": name,
-                            "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8"},
-        }, ensure_ascii=False, indent=2))
-    manifest = os.path.join(web_dir, "src", "manifest.json")
-    if not os.path.exists(manifest):
-        write(manifest, json.dumps({"name": name, "appid": "", "versionName": "0.1.0",
-                                    "versionCode": "1", "h5": {"router": {"mode": "hash"}}}, ensure_ascii=False, indent=2))
-    print(f"  [OK] uni-app 工程生成（H5 + 微信小程序）")
+    run(["npx", "--yes", "degit", "dcloudio/uni-preset-vue#vite-ts", web_dir, "--force"], web_dir,
+        "degit 初始化 uni-app（Vue3 + Vite + TS 官方预设）")
+    if not os.path.isfile(os.path.join(web_dir, "package.json")):
+        print("  [提示] 未取到官方预设（可能无网络）；已写入结构骨架，稍后可 `npx degit dcloudio/uni-preset-vue#vite-ts .` 覆盖")
+    tpl = os.path.join(TEMPLATE_DIR, "code", "web-uniapp")
+    copy_tree_render(tpl, web_dir, mapping)
+    print(f"  [OK] uni-app 工程生成（H5 + 微信小程序 基础设施已就位）")
 
 
 # ============ 部署 CI / Docker（按栈变体） ============
@@ -659,9 +455,14 @@ def main():
 
     # ===== 代码工程（按栈） =====
     print("\n[代码工程]")
-    {"dotnet": init_api_dotnet, "python": init_api_python}[backend](target, code_name)
-    {"vue": lambda t, cn: init_web_vue(t, cn, name, desc),
-     "uniapp": lambda t, cn: init_web_uniapp(t, cn, name, desc)}[frontend](target, code_name)
+    if backend == "dotnet":
+        init_api_dotnet(target, code_name)
+    else:
+        init_api_python(target, code_name, mapping)
+    if frontend == "vue":
+        init_web_vue(target, code_name, name, desc)
+    else:
+        init_web_uniapp(target, code_name, name, desc, mapping)
     init_deploy(target, code_name, backend, frontend)
 
     # ===== 残留占位符自检 =====
