@@ -120,6 +120,63 @@ FRONTS = {
 ALWAYS_STANDARDS = ["通用开发规范.md"]
 TEXT_EXT = (".py", ".ts", ".vue", ".js", ".json", ".scss", ".css", ".md", ".ini", ".txt", ".example")
 
+# ============ 本地质量门禁（scripts/ci.sh）：fmt + build + test + 前端构建 ============
+CI_BACKEND_CMDS = {
+    "dotnet": 'cd "$ROOT/src/backend/api"\n'
+              'echo "  · dotnet format（风格检查）"; dotnet format --verify-no-changes\n'
+              'echo "  · dotnet build"; dotnet build --nologo\n'
+              'echo "  · dotnet test"; dotnet test --nologo',
+    "python": 'cd "$ROOT/src/backend/api"\n'
+              'echo "  · 语法编译"; python -m compileall -q app\n'
+              'command -v ruff >/dev/null && { echo "  · ruff"; ruff check .; }\n'
+              'command -v black >/dev/null && { echo "  · black"; black --check .; }\n'
+              'echo "  · pytest"; pytest -q',
+}
+CI_FRONTEND_CMDS = {
+    "vue": 'cd "$ROOT/src/backend/web"\n'
+           '[ -f package-lock.json ] && npm ci || npm install\n'
+           'command -v npx >/dev/null && { echo "  · prettier"; npx prettier --check src || true; }\n'
+           'echo "  · 前端构建"; npm run build',
+    "uniapp": 'cd "$ROOT/src/backend/web"\n'
+              '[ -f package-lock.json ] && npm ci || npm install\n'
+              'echo "  · 前端构建（H5）"; npm run build:h5 || npm run build',
+}
+
+
+def write_ci_scripts(target, backend, frontend):
+    """生成本地优先的统一门禁：scripts/ci.sh + .githooks/pre-push（推送前本地跑，不依赖远端）。"""
+    be_cmd = CI_BACKEND_CMDS[backend]
+    fe_cmd = CI_FRONTEND_CMDS[frontend]
+    bshort = BACKENDS[backend]["label"].split(" + ")[0]
+    fshort = FRONTS[frontend]["label"].split("（")[0]
+    ci_sh = (
+        "#!/usr/bin/env bash\n"
+        "# 本地优先的统一质量门禁：后端 fmt+build+test + 前端 install+build。\n"
+        "# 本地、git 钩子、远端 CI 都调用它 —— 门禁即脚本，不依赖任何远端。\n"
+        "set -euo pipefail\n"
+        'ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"\n\n'
+        'echo "==> [1/2] 后端：' + bshort + ' fmt + build + test"\n' + be_cmd + "\n\n"
+        'echo "==> [2/2] 前端：' + fshort + ' 构建"\n' + fe_cmd + "\n\n"
+        'echo "==> 全部通过 ✅"\n'
+    )
+    pre_push = (
+        "#!/usr/bin/env bash\n"
+        "# git pre-push 钩子：推送前本地执行 scripts/ci.sh，真正挡住坏提交，且不依赖任何远端 CI。\n"
+        "set -euo pipefail\n"
+        'ROOT="$(git rev-parse --show-toplevel)"\n'
+        'exec bash "$ROOT/scripts/ci.sh"\n'
+    )
+    ci_path = os.path.join(target, "scripts", "ci.sh")
+    hook_path = os.path.join(target, ".githooks", "pre-push")
+    write(ci_path, ci_sh)
+    write(hook_path, pre_push)
+    for p in (ci_path, hook_path):
+        try:
+            os.chmod(p, 0o755)
+        except OSError:
+            pass
+    print("  [OK] 生成本地门禁 scripts/ci.sh + git pre-push 钩子")
+
 
 # ============ 通用工具 ============
 def copy_tree(src, dst):
@@ -403,6 +460,7 @@ def init_git(target):
         print("  [跳过] 未检测到 git，跳过仓库初始化")
         return
     run(["git", "init"], target, "初始化 git 仓库")
+    run(["git", "config", "core.hooksPath", ".githooks"], target, "启用仓库内 .githooks（pre-push 门禁）")
     run(["git", "add", "-A"], target, "暂存全部文件")
     if run(["git", "commit", "-m", "chore: 初始化项目脚手架"], target, "创建初始提交"):
         print("  [OK] git 仓库初始化完成（含初始提交）")
@@ -464,6 +522,9 @@ def main():
     else:
         init_web_uniapp(target, code_name, name, desc, mapping)
     init_deploy(target, code_name, backend, frontend)
+
+    # 本地优先质量门禁（scripts/ci.sh + git pre-push）
+    write_ci_scripts(target, backend, frontend)
 
     # ===== 残留占位符自检 =====
     leftovers = []
