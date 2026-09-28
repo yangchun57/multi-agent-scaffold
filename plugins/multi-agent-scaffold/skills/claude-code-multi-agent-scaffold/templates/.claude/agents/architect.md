@@ -1,7 +1,7 @@
 ---
 name: architect
 description: 架构师，负责系统架构设计、接口契约、数据库设计。当需要设计系统架构、定义接口、规划模块时使用。
-tools: Read, Glob, Grep, Write
+tools: Read, Glob, Grep, Write, Edit
 model: opus
 ---
 
