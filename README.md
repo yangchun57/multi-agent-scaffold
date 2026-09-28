@@ -10,7 +10,7 @@
 - **21 个专职 Agent**（五阶段：需求分析 / 任务规划 / 需求评审 / 开发实施 / 测试修复），含 8 个 `req-*` 需求评审团队与 functional-tester / bug-fixer
 - **9 个斜杠命令**：`/product-discovery`、`/new-feature`、`/review`、`/gen-tests`、`/gen-test-cases`、`/change-request`、`/fix-bug`、`/retro`、`/deploy`
 - **护栏 hooks**：提交前跑构建+测试（`pre_commit_guard`），写实体后做多租户红线与敏感信息扫描（`tenant_guard`）
-- **附带生成器 skill** `claude-code-multi-agent-scaffold`：需要从零搭一个新项目骨架时调用它，一键生成带正确命名的 `.claude/` + `CLAUDE.md` + `docs/` + `src/backend`（dotnet new + create-vite）+ CI + Docker
+- **附带生成器 skill** `claude-code-multi-agent-scaffold`：需要从零搭一个新项目骨架时调用它，一键生成带正确命名的 `.claude/` + `CLAUDE.md` + `docs/` + `src/backend` + CI + Docker；**技术栈可配置** `--backend dotnet|python`、`--frontend vue|uniapp`（未指定则交互式询问，绝不静默），并按栈渲染 Agent/CLAUDE.md、加载对应规范、切换 CI/Docker 变体
 
 ## 安装
 

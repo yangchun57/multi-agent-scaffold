@@ -62,7 +62,7 @@ model: opus
 
 ```markdown
 # 设计规范
-- 组件库：Element Plus
+- 组件库：{{UI_LIB}}
 - 布局：默认侧边栏 + 顶部导航
 - 表单：label 宽度 90px，选择器 160px
 - 状态设计：空态 / 加载态 / 错误态
@@ -75,7 +75,7 @@ model: opus
 4. 写回对应文档
 
 ## 必须遵守
-1. 技术栈遵循前端开发规范（Vue 3 + Element Plus），参考 `.claude/standards/前端开发规范.md`
+1. 技术栈遵循前端规范（{{FRONTEND_STACK}}），参考 `{{FRONTEND_STANDARDS_FILE}}`
 2. 遵守 CLAUDE.md 的最高优先级约束，所有页面都要考虑隔离和角色权限
 3. 设计要覆盖异常态（空态、加载态、错误态、无权限态）
 

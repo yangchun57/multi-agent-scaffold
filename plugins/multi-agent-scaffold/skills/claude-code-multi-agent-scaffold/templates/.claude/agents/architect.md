@@ -24,9 +24,9 @@ model: opus
 
 ## 必须遵守（最高优先级）
 1. 严格遵守 CLAUDE.md 的最高优先级约束（字段映射、分层边界、响应格式）
-2. 三层字段命名映射：snake_case → PascalCase → camelCase
+2. 三层字段命名映射：{{FIELD_MAPPING}}
 3. 分层边界：Api / Service / Model / Common 四层职责清晰
-4. 统一响应 ApiResult<T>，分页 PageResult<T>（items/total/pageIndex/pageSize）
+4. 统一响应 {{ENVELOPE}}（分页字段 items/total/pageIndex/pageSize）
 
 ## 交付物格式
 - 接口契约需包含：方法、路由、权限、请求参数、响应结构、错误码

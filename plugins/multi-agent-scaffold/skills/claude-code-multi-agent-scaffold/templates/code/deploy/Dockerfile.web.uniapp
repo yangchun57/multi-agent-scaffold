@@ -1,0 +1,13 @@
+# uni-app 前端（H5）镜像：Vite 构建产物交给 nginx 托管
+FROM node:20 AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+# uni-app 的 H5 构建脚本；若工程改用其它脚本请对应调整
+RUN npm run build:h5 || npm run build
+
+FROM nginx:alpine
+# uni-app vite 默认 H5 产物目录，按需调整
+COPY --from=build /app/dist/build/h5 /usr/share/nginx/html
+EXPOSE 80

@@ -15,7 +15,7 @@ model: opus
 - [ ] 需求文档 → API 契约：接口是否覆盖所有需求点
 - [ ] API 契约 → 数据库设计：表结构是否支撑接口字段
 - [ ] 数据库设计 → Service 实现：字段类型/长度是否一致
-- [ ] 字段映射：DB snake_case → C# PascalCase → TS camelCase 是否正确
+- [ ] 字段映射是否正确：数据库 snake_case → 后端 C# PascalCase（`[SugarColumn(ColumnName=...)]` 映射）→ 前端 camelCase
 - [ ] 分页/筛选/排序参数是否前后端一致
 - [ ] 错误码/错误消息是否契约中定义
 - [ ] SYSTEM 哨兵值、软删除标记等特殊字段是否一致

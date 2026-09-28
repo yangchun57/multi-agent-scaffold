@@ -1,6 +1,6 @@
 ---
 name: claude-code-multi-agent-scaffold
-description: Scaffolds a complete Claude Code multi-agent team project. Creates the .claude/ directory (21 role agents across 5 lifecycle phases, 9 slash commands, 2 guardrail hooks, dev standards), CLAUDE.md, docs/00-项目文档, and a self-contained generator script. Use when the user wants to set up a Claude Code multi-agent project, an AI engineering team, or an automated software-engineering workflow.
+description: Scaffolds a complete Claude Code multi-agent team project. Creates the .claude/ directory (21 role agents across 5 lifecycle phases, 9 slash commands, 2 guardrail hooks, dev standards), CLAUDE.md, docs/00-项目文档, and a self-contained generator script with a configurable tech stack (backend dotnet|python, frontend vue|uniapp). Use when the user wants to set up a Claude Code multi-agent project, an AI engineering team, or an automated software-engineering workflow.
 ---
 
 # Claude Code Multi-Agent Team Scaffold
@@ -81,8 +81,8 @@ req-coordinator                     （协调者）
 
 ## Scaffolding workflow
 
-1. Ask the user for: project name, one-line description, target directory. (Tech stack defaults to .NET 8 + Vue 3; ask if different.)
-2. Run the generator: `python scripts/scaffold.py <target-dir> --name "名称" --desc "描述" --code-name "CodeName" [--standards <规范源目录>]`
+1. Ask the user for: project name, one-line description, target directory, and tech stack — backend `dotnet` (default) or `python`, frontend `vue` (default) or `uniapp`. If a stack is not specified, the generator prompts interactively; never silently pick.
+2. Run the generator: `python scripts/scaffold.py <target-dir> --name "名称" --desc "描述" --code-name "CodeName" [--backend dotnet|python] [--frontend vue|uniapp] [--standards <规范源目录>]`
 3. The script generates: .claude/（agents/commands/hooks/settings）、CLAUDE.md、docs/ 整目录（00-项目文档 md 工作文件模板 + README 三轨格式规范 + common.css + md2html.py 转换器 + _模板与规范 裸HTML模板与图标速查），src/backend 代码工程（dotnet new .NET 8 分层 API 含集成测试基类 + npm create vite Vue 3 web 含 prettier），外加 sql/migrations 迁移目录、gen:api 类型生成、.editorconfig、CI workflow + Dockerfile x2 + docker-compose + dependabot。CLAUDE.md 内置分支约定（trunk-based：main 干净可构建 + feat/change 分支）。docs 三轨格式约定：README/Agent 工作文件=md，01/02 交付物=HTML（裸HTML 引 common.css，用 md2html.py 转换）。包含 8 个需求评审 Agent（req-*），形成完整的需求评审团队；另含 functional-tester / bug-fixer 两个测试修复 Agent（对应 /gen-test-cases、/fix-bug 命令）。
 4. `--standards` 指向自定义规范源目录时，脚本覆盖 `.claude/standards/`；未提供时使用内置的 7 份默认规范（含按主题拆分的 `topics/` 索引——Agent 优先读 topics/INDEX.md 定位主题，禁止无目的整读大规范）。规范更新后可重跑 `python scripts/split-standards.py <standards目录>` 重新生成 topics。
 5. 脚本自动 `git init` 并创建初始提交（`chore: 初始化项目脚手架`）；git 未安装或未配置 user.name/email 时只 git init、跳过提交。

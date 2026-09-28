@@ -6,26 +6,29 @@
 
 {{PROJECT_DESC}}
 
-<!-- TODO: 填写技术栈，例如：
-- **后端**：ASP.NET Core Web API（.NET 8）、SqlSugar 5.x、MySQL 8.0、JWT Bearer、Serilog、Swagger
-- **前端**：Vue 3、Element Plus、Pinia、Vue Router、Axios、Vite、TypeScript
--->
+## 技术栈
+
+- **后端**：{{BACKEND_STACK}}
+- **前端**：{{FRONTEND_STACK}}
+- **多租户**：共享数据库 + `tenant_id` 字段隔离（业务表实体必须携带租户字段，查询经全局过滤器）
+
+<!-- 若与本项目的实际栈不符，请就地修改本节。 -->
 
 ## 最高优先级约束（违反即返工，任何情况下不得妥协）
 
-<!-- TODO: 填写本项目的业务红线，这是最关键的部分。示例：
-1. **【隔离红线】** 所有业务表实体必须包含租户隔离字段，所有查询必须经过全局过滤器。
-2. **【字段映射红线】** 数据库 snake_case → 后端 PascalCase → 前端 camelCase，前端禁止自行改名。
-3. **【分层边界红线】** Controller 禁止业务逻辑；Service 禁止操作 HttpContext；Model 禁止业务方法；Common 禁止引用 Service/Model。
-4. **【响应格式红线】** 统一返回 ApiResult<T>；分页 PageResult<T>。
+<!-- TODO: 填写本项目的业务红线，这是最关键的部分。示例（脚手架已按所选栈预填通用部分，业务约束请补充）：
+1. **【隔离红线】** 所有业务表实体必须包含租户隔离字段 tenant_id，所有查询必须经过全局过滤器。
+2. **【字段映射红线】** {{FIELD_MAPPING}}，前端禁止自行改名。
+3. **【分层边界红线】** 接口层禁含业务逻辑；业务层禁操作 Web 上下文；模型层禁含业务方法；通用层禁反向依赖业务层。
+4. **【响应格式红线】** 统一返回 {{ENVELOPE}}。
 -->
 
 ## 开发规范引用（按需读取，不要复制全文到记忆）
 
 | 规范 | 路径 | 何时读 |
 |------|------|--------|
-| 后端开发规范 | `.claude/standards/后端开发规范.md` | 写任何后端代码前 |
-| 前端开发规范 | `.claude/standards/前端开发规范.md` | 写任何前端代码前 |
+| 后端规范 | `{{BACKEND_STANDARDS_FILE}}` | 写任何后端代码前 |
+| 前端规范 | `{{FRONTEND_STANDARDS_FILE}}` | 写任何前端代码前 |
 | 通用开发规范 | `.claude/standards/通用开发规范.md` | 涉及数据库、字段映射、代码审查时 |
 
 
@@ -92,8 +95,8 @@
 1. **分支模型**（简化 trunk-based）：`main` 始终干净可构建（CI 绿）；功能性工作在 `feat/xxx`、变更在 `change/xxx` 分支进行，完成后合回 main
 2. **禁止直接污染 main**：/new-feature、/change-request 的实施阶段应基于分支进行，阶段化提交落在功能分支上
 3. **并行开发**：命令交错时（如 /new-feature 进行中来了 /change-request），各自独立分支，避免互相覆盖
-4. **静态检查**：后端 `dotnet format`（CI 校验）、前端 `prettier`（`npm run format` / `format:check`）、根目录 `.editorconfig` 统一基础格式
-5. **集成测试**：红线类约束（隔离、认证授权）优先用集成测试锁死（tests/{代码名}.Tests/Integration/，基于 WebApplicationFactory），比文档更硬
+4. **静态检查**：后端 `{{BACKEND_LINT}}`（CI 校验）、前端 `prettier`（`npm run format` / `format:check`）、根目录 `.editorconfig` 统一基础格式
+5. **集成测试**：红线类约束（隔离、认证授权）优先用集成测试锁死（后端用栈内建应用测试宿主——.NET 为 WebApplicationFactory、Python 为 fastapi TestClient），比文档更硬
 6. **依赖更新**：dependabot 每周提 minor/patch 升级 PR，main 分支合并前跑 CI 确认不破坏
 
 ## 提交约定（阶段化提交）
@@ -111,8 +114,9 @@
 
 ## 常用命令
 
-<!-- TODO: 填写构建/测试命令，例如：
-- 后端构建：cd backend && dotnet build
-- 后端测试：cd backend && dotnet test
-- 前端启动：cd frontend && npm run dev
--->
+- 后端构建：`{{BACKEND_BUILD}}`
+- 后端测试：`{{BACKEND_TEST}}`
+- 前端启动：`cd src/backend/web && npm run dev`
+- 前端构建：`cd src/backend/web && npm run build`
+
+<!-- 若所选栈的命令不同（如 uni-app 用 npm run dev:h5），请就地修改。 -->

@@ -17,18 +17,18 @@ model: opus
 
 ### 字段映射红线
 - [ ] 数据库字段 snake_case 是否正确
-- [ ] 后端 C# 属性 PascalCase 是否正确，SugarColumn 映射是否正确
+- [ ] 后端属性命名与映射是否正确（{{FIELD_MAPPING}}）
 - [ ] 前端 TS 属性 camelCase 是否与后端 DTO 一致
 - [ ] 是否存在前端自行改名（devices→facilities、pageIndex→pageNum、items→list）
 
 ### 分层边界
 - [ ] Controller 是否包含业务逻辑（禁止）
-- [ ] Service 是否操作 HttpContext（禁止）
+- [ ] 业务层是否操作 Web 上下文（禁止）
 - [ ] Model 是否包含业务方法（禁止）
 - [ ] Common 是否引用 Service/Model（禁止）
 
 ### 响应格式
-- [ ] 是否统一返回 ApiResult<T>
+- [ ] 是否统一返回 {{ENVELOPE}}
 - [ ] 分页字段是否为 items/total/pageIndex/pageSize
 - [ ] 业务错误是否用 BusinessException
 

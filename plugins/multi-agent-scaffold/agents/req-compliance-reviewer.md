@@ -15,19 +15,19 @@ model: opus
 ### 红线 1 - 分层边界
 - [ ] Api→Service→Model→Common 依赖方向是否正确
 - [ ] Controller 是否包含业务逻辑（禁止）
-- [ ] Service 是否操作 HttpContext（禁止）
+- [ ] 业务层是否操作 Web 上下文（禁止）
 - [ ] Model 是否包含业务方法（禁止）
 - [ ] Common 是否引用 Service/Model（禁止）
 
 ### 红线 2 - 响应格式
-- [ ] 是否统一返回 ApiResult<T>
+- [ ] 是否统一返回 ApiResult<T> / PageResult<T>
 - [ ] 分页是否使用 PageResult<T>
 - [ ] 分页字段是否为 items/total/pageIndex/pageSize
 - [ ] 业务错误是否用 BusinessException
 
 ### 红线 3 - 字段映射
 - [ ] 数据库字段 snake_case 是否正确
-- [ ] 后端 C# 属性 PascalCase 是否正确，SugarColumn 映射是否正确
+- [ ] 后端属性命名与映射是否正确（数据库 snake_case → 后端 C# PascalCase（`[SugarColumn(ColumnName=...)]` 映射）→ 前端 camelCase）
 - [ ] 前端 TS 属性 camelCase 是否与后端 DTO 一致
 - [ ] auto-generated types 是否未被手改
 

@@ -48,7 +48,7 @@ model: opus
 | T2 | 接口契约 | architect | - | 更新api-contracts.md | P0 |
 | T3 | 后端实现 | backend-dev | T1,T2 | 接口可用+单测通过 | P0 |
 | T4 | 前端实现 | frontend-dev | T2 | 页面可用 | P0 |
-| T5 | 单元测试 | tester | T3 | dotnet test通过 | P0 |
+| T5 | 单元测试 | tester | T3 | 后端测试通过（见 CLAUDE.md 常用命令）| P0 |
 | T6 | 代码审查 | reviewer | T3,T4 | 审查报告无红线问题 | P0 |
 ```
 

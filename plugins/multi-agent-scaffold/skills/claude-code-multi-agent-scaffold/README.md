@@ -27,7 +27,8 @@ python ~/.qwenworkcn/skills/claude-code-multi-agent-scaffold/scripts/scaffold.py
   <目标目录> \
   --name "电商系统" \
   --desc "B2C 电商平台" \
-  --code-name "Ecommerce"
+  --code-name "Ecommerce" \
+  --backend dotnet --frontend vue
 ```
 
 参数说明：
@@ -36,8 +37,12 @@ python ~/.qwenworkcn/skills/claude-code-multi-agent-scaffold/scripts/scaffold.py
 |------|------|--------|
 | `--name` | 中文显示名，用于 CLAUDE.md/README 标题 | 新项目 |
 | `--desc` | 一句话项目描述 | 空 |
-| `--code-name` | 代码工程名（英文 PascalCase），决定 .NET 解决方案与 Vue 工程命名 | App |
-| `--standards` | 自定义开发规范源目录（覆盖内置 7 份规范） | 内置规范 |
+| `--code-name` | 代码工程名（英文 PascalCase），决定解决方案与前端工程命名 | App |
+| `--backend` | 后端技术栈：`dotnet`（.NET 8+SqlSugar）或 `python`（FastAPI+SQLAlchemy） | 交互式询问，默认 dotnet |
+| `--frontend` | 前端技术栈：`vue`（Vue3+Element Plus）或 `uniapp`（uni-app H5+小程序） | 交互式询问，默认 vue |
+| `--standards` | 自定义开发规范源目录（覆盖内置规范；缺省按所选栈加载对应规范子集） | 内置规范 |
+
+> 技术栈可配置：命令行传了就用；**没传且处于交互终端时会逐项列选项让你选**，绝不静默。非交互（CI/脚本）下未传则报错要求显式指定。所选栈会渲染进 Agent 定义与 CLAUDE.md，并只加载对应的开发规范（后端 .NET/Python、前端 Vue/uni-app + 通用），CI 与 Dockerfile 也随之切换变体。
 
 脚本会一次性生成（含 git init + 初始提交）：
 
@@ -48,8 +53,8 @@ python ~/.qwenworkcn/skills/claude-code-multi-agent-scaffold/scripts/scaffold.py
 ├── .github/                      ← CI workflow + dependabot
 ├── docs/00-项目文档/              ← 文档模板 + 变更/经验记录
 ├── src/backend/
-│   ├── api/                      ← .NET 8 分层 API（带正确命名 + 迁移目录 + 集成测试基类）
-│   └── web/                      ← Vue 3 工程（带正确命名 + prettier + gen:api 脚本）
+│   ├── api/                      ← 后端工程（dotnet=.NET 8 分层+迁移+集成测试基类；python=FastAPI+SQLAlchemy 结构骨架）
+│   └── web/                      ← 前端工程（vue=Vue3+Element Plus+prettier+gen:api；uniapp=uni-app 跨端）
 ├── docker-compose.yml            ← 本地编排（MySQL + API + Web）
 ├── .editorconfig / .gitattributes
 └── .mcp.json / .gitignore

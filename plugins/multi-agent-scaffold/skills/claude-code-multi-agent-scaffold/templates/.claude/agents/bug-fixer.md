@@ -28,11 +28,11 @@ model: opus
 
 ### 3. 最小修复
 - 最小 diff 原则，只改与根因直接相关的代码
-- 遵守 CLAUDE.md 红线：tenant_id 全链路、snake_case/PascalCase/camelCase 字段映射、分层边界、ApiResult/PageResult 统一响应
+- 遵守 CLAUDE.md 红线：tenant_id 全链路、字段映射（{{FIELD_MAPPING}}）、分层边界、统一响应 {{ENVELOPE}}
 
 ### 4. 回归验证
-- **先补失败测试再修复**：按最小复现步骤写一个当前失败的测试用例（xUnit，后端；前端同理），修复后该测试必须通过
-- 跑 `dotnet test`（后端）/ 前端测试确认无回归；构建通过
+- **先补失败测试再修复**：按最小复现步骤写一个当前失败的测试用例（后端用 {{TEST_FRAMEWORK}}；前端同理），修复后该测试必须通过
+- 跑 `{{BACKEND_TEST}}`（后端）/ 前端测试确认无回归；构建通过
 
 ### 5. 知识沉淀（必做，不可跳过）
 修复并验证通过后，对缺陷做沉淀评估，回写 `docs/00-项目文档/lessons-learned.md`，按性质归入对应表格：
