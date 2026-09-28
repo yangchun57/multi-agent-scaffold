@@ -164,14 +164,28 @@ def convert(md_path, out_path, tag="", relcss="common.css"):
                 cur[2].append(tb)
             continue
 
-        # 引用块 → box.info（多行合并）
+        # 引用块 → box（支持语义标记 > [!TIP] / [!WARN] / [!ERROR] / [!INFO]，默认 info）
         if s.startswith(">"):
             quote = []
             while i < len(lines) and lines[i].strip().startswith(">"):
                 quote.append(lines[i].strip().lstrip(">").strip())
                 i += 1
-            text = " ".join(q for q in quote if q)
-            cur[2].append(f'<div class="box info"><span class="bt">说明</span><p>{inline(text)}</p></div>')
+            quote = [q for q in quote if q]
+            kind, label = "info", "说明"
+            if quote:
+                m0 = re.match(r"^\[!([A-Za-z]+)\]\s*(.*)$", quote[0])
+                if m0:
+                    k = m0.group(1).lower()
+                    kind = {"tip": "tip", "warn": "warn", "warning": "warn",
+                            "error": "error", "danger": "error", "info": "info"}.get(k, "info")
+                    label = {"tip": "要点", "warn": "注意", "error": "警告", "info": "说明"}[kind]
+                    if m0.group(2).strip():
+                        quote[0] = m0.group(2).strip()
+                    else:
+                        quote = quote[1:]
+            if quote:
+                text = " ".join(quote)
+                cur[2].append(f'<div class="box {kind}"><span class="bt">{label}</span><p>{inline(text)}</p></div>')
             continue
 
         # 列表
