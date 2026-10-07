@@ -1,7 +1,7 @@
 {
   "name": "multi-agent-scaffold",
-  "description": "Claude Code 多 Agent 软件工程团队：需求分析/任务规划/需求评审/开发实施/测试修复 五阶段 23 个专职 Agent、10 个斜杠命令（含编码前方案放行门禁 /plan-gate）、多租户护栏 hooks，并附带新项目脚手架生成器 skill。",
-  "version": "1.4.0",
+  "description": "Claude Code 多 Agent 项目脚手架生成器。为不同技术栈（后端 dotnet/python、前端 vue/uniapp）生成定制化的 .claude 配置，包含 23 个专职 Agent、10 个斜杠命令、多租户护栏 hooks、路径范围 rules 自动加载机制。仅用于新建项目，不支持已有项目。",
+  "version": "2.0.0",
   "author": {
     "name": "yangchun57"
   }

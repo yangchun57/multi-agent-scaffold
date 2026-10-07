@@ -4,15 +4,15 @@
     "name": "yangchun57"
   },
   "metadata": {
-    "description": "Claude Code 多 Agent 软件工程团队脚手架：23 Agent / 10 命令 / 护栏 hooks + 一键生成器"
+    "description": "Claude Code 多 Agent 项目脚手架生成器：按技术栈（dotnet/python × vue/uniapp）生成定制化 .claude 配置，含 23 Agent / 10 命令 / 护栏 hooks / 路径范围 rules 自动加载"
   },
   "plugins": [
     {
       "name": "multi-agent-scaffold",
       "source": "./plugins/multi-agent-scaffold",
-      "description": "安装即得 23 个专职 Agent、10 个斜杠命令与多租户护栏 hooks（含编码前方案放行门禁 /plan-gate）；附带可一键生成 .NET8+Vue3 多租户项目脚手架的 skill",
-      "version": "1.4.0"
+      "description": "项目脚手架生成器 skill，按技术栈生成定制化的 .claude 配置（23 Agent、10 命令、护栏 hooks、路径范围 rules）。仅用于新建项目，不支持已有项目。",
+      "version": "2.0.0"
     }
   ],
-  "version": "1.4.0"
+  "version": "2.0.0"
 }
