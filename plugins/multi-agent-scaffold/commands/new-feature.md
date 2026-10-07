@@ -26,6 +26,10 @@ description: 新功能开发（规划→确认→架构→数据库→后端→�
 ## 第三步：按计划派发 worker（依次启动下游 SubAgent）
 按任务依赖顺序启动对应 SubAgent，每个交付物完成后主 Agent 立即提交：
 - architect 完成 → `docs: 架构与接口契约`
+- **★方案门禁（强制闸门）：执行 `/plan-gate`**
+  - REJECT → **停止流程**，把阻塞项交回 architect 修订，修订后重新执行 `/plan-gate`
+  - CONDITIONAL PASS → 逐条确认放行条件后方可继续
+  - PASS → 继续 db-engineer
 - db-engineer 完成 → `docs: 数据库设计`
 - backend-dev 完成 → `feat: 后端实现`
 - frontend-dev 完成 → `feat: 前端实现`
