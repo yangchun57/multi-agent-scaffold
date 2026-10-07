@@ -1,6 +1,6 @@
 ---
 name: claude-code-multi-agent-scaffold
-description: Scaffolds a complete Claude Code multi-agent team project. Creates the .claude/ directory (21 role agents across 5 lifecycle phases, 9 slash commands, 2 guardrail hooks, dev standards), CLAUDE.md, docs/00-项目文档, and a self-contained generator script with a configurable tech stack (backend dotnet|python, frontend vue|uniapp). Use when the user wants to set up a Claude Code multi-agent project, an AI engineering team, or an automated software-engineering workflow.
+description: Scaffolds a complete Claude Code multi-agent team project. Creates the .claude/ directory (23 role agents across 5 lifecycle phases, 10 slash commands, 2 guardrail hooks, path-scoped rules auto-loading, dev standards), CLAUDE.md, docs/00-项目文档, and a self-contained generator script with a configurable tech stack (backend dotnet|python, frontend vue|uniapp). Use when the user wants to set up a Claude Code multi-agent project, an AI engineering team, or an automated software-engineering workflow.
 ---
 
 # Claude Code Multi-Agent Team Scaffold
@@ -11,7 +11,7 @@ Generate a complete Claude Code multi-agent team covering the full software-engi
 
 ## Core principle: role template vs business context separation
 
-- `.claude/` holds ONLY abstract, cross-project reusable content: agents (how to work), commands (workflows), hooks (guardrails), standards (how to write code)
+- `.claude/` holds ONLY abstract, cross-project reusable content: agents (how to work), commands (workflows), hooks (guardrails), rules (path-scoped auto-loaded conventions), standards (deep reference docs)
 - `docs/00-项目文档/` holds business-specific content: requirements, architecture, task plans
 - `CLAUDE.md` is the connection point (接线点): project overview + red lines + doc index
 - Agent definitions MUST NOT contain business nouns or rules — those live in CLAUDE.md. Agents reference "遵守 CLAUDE.md 的最高优先级约束" instead of duplicating rules.
@@ -23,9 +23,10 @@ Generate a complete Claude Code multi-agent team covering the full software-engi
 ├── CLAUDE.md                  # project memory (TODO placeholders for business)
 ├── .claude/
 │   ├── settings.json          # permissions + hooks
-│   ├── agents/                # 21 role agents
-│   ├── commands/              # 9 slash commands
+│   ├── agents/                # 23 role agents
+│   ├── commands/              # 10 slash commands
 │   ├── hooks/                 # 2 guardrail scripts
+│   ├── rules/                 # path-scoped rules (auto-loaded by glob)
 │   └── standards/             # dev standards (abstract, reusable)
 ├── .mcp.json
 ├── .gitignore
@@ -38,7 +39,7 @@ Generate a complete Claude Code multi-agent team covering the full software-engi
         └── web/               # Vue 3 前端骨架（业务无关）
 ```
 
-## Agent roster (21 agents, 5 phases)
+## Agent roster (23 agents, 5 phases)
 
 | Phase | Agent | Role | Model |
 |-------|-------|------|-------|
@@ -54,6 +55,8 @@ Generate a complete Claude Code multi-agent team covering the full software-engi
 | 需求评审 | req-change-impact-reviewer | 变更影响评审专家，分析影响范围、连锁反应、回滚方案 | opus |
 | 需求评审 | req-compliance-reviewer | 红线合规评审专家，检查分层边界、响应格式、字段映射、SDK锁定 | opus |
 | 需求评审 | req-test-coverage-reviewer | 测试覆盖度评审专家，检查测试用例对验收标准的覆盖 | opus |
+| 开发实施 | plan-risk-analyst | 方案失效点扫描（R1~R7），只读 | opus |
+| 开发实施 | plan-gatekeeper | 方案放行判定（C1/C2/C3），只读 | sonnet |
 | 开发实施 | architect | 架构设计、接口契约 | opus |
 | 开发实施 | db-engineer | 表结构、SQL | sonnet |
 | 开发实施 | backend-dev | 后端代码 | sonnet |
@@ -140,8 +143,9 @@ claude-code-multi-agent-scaffold/
 │   ├── README.md           ← 含占位符
 │   ├── .mcp.json
 │   ├── .gitignore
-│   ├── .claude/            ← agents/commands/hooks/settings + standards（7 份规范）
-│   │   └── agents/         ← 21 个 Agent 模板（含 8 个需求评审 + 2 个测试修复 Agent）
+│   ├── .claude/            ← agents/commands/hooks/rules/settings + standards
+│   │   ├── agents/         ← 23 个 Agent 模板（含 8 个需求评审 + 2 个方案门禁 + 2 个测试修复）
+│   │   └── rules/          ← 13 个路径范围规则（_always 3 + _backend 6 + _frontend 4，按技术栈选择）
 │   ├── docs/00-项目文档/   ← 12 个文档模板
 │   ├── docs/README.md      ← 文档管理规范
 │   └── code/               ← 自定义基础设施（CLI 生成骨架后写入）
