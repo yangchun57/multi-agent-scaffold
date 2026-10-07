@@ -19,12 +19,14 @@ types/
 
 每个实体定义三个类型：**Entity**（完整实体）、**Form**（表单）、**Query**（查询参数）
 
+**重要：所有 ID 字段必须使用 `string` 类型**（雪花 ID 为 64 位整数，超出 JS number 安全精度范围 2^53-1）。
+
 ```typescript
 // ===== Campus =====
 
 // 完整实体（对应数据库记录）
 export interface Campus {
-  campusId: number
+  campusId: string          // 雪花 ID，必须用 string（防止精度丢失）
   campusName: string
   campusCode: string
   address?: string
@@ -35,10 +37,10 @@ export interface Campus {
 
 // 表单类型（新建/编辑）
 export interface CampusForm {
-  campusId?: number           // 编辑时有值
-  campusName: string          // 必填字段
-  campusCode: string          // 必填字段
-  address?: string            // 可选字段
+  campusId?: string         // 编辑时有值（雪花 ID）
+  campusName: string        // 必填字段
+  campusCode: string        // 必填字段
+  address?: string          // 可选字段
   remark?: string
 }
 
@@ -48,6 +50,11 @@ export interface CampusQuery extends PageQuery {
   status?: number | null
 }
 ```
+
+**禁止事项**：
+- 禁止将 ID 字段定义为 `number` 类型（雪花 ID 超出 JS number 安全范围会丢精度）
+- 禁止使用 `parseInt()` 或 `Number()` 转换 ID
+- 禁止在模板插值中隐式转换（如 `:key="item.id"` 可以，但 `:key="item.id + 1"` 禁止）
 
 ### 3.3 API 响应类型
 

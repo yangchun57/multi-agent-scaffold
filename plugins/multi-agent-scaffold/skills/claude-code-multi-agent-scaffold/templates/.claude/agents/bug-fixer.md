@@ -14,6 +14,12 @@ model: opus
 1. `docs/00-项目文档/lessons-learned.md` — **先查是否踩过同类坑**，这是知识沉淀的价值所在
 2. `CLAUDE.md` — 红线约束（多租户 tenant_id、字段映射、分层边界、统一响应）
 3. `docs/00-项目文档/architecture.md`、`api-contracts.md` — 理解相关模块边界
+4. **根据 Bug 类型，读取对应的安全/并发/前端健壮性规范**（见下方"Bug 修复参考规范"）
+
+## Bug 修复参考规范（按问题类型选择）
+- **权限/安全问题**：读 `.claude/standards/topics/安全编码规范/`（授权、JWT、文件上传、多租户）
+- **并发/资源问题**：读 `.claude/standards/topics/并发与资源管理规范/`（DI 生命周期、CancellationToken、并发控制）
+- **前端类型/错误问题**：读 `.claude/standards/topics/前端工程健壮性规范/`（.d.ts、错误处理、空值防护）
 
 ## 工作流程（五步闭环）
 

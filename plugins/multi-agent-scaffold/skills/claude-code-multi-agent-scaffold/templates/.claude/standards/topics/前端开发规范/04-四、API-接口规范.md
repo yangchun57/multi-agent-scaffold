@@ -22,11 +22,11 @@ export function createCampus(data: CampusForm): Promise<ApiResult<Campus>> {
   return request.post('/family/campuses', data)
 }
 
-export function updateCampus(id: number, data: CampusForm): Promise<ApiResult<Campus>> {
+export function updateCampus(id: string, data: CampusForm): Promise<ApiResult<Campus>> {
   return request.put(`/family/campuses/${id}`, data)
 }
 
-export function deleteCampus(id: number): Promise<ApiResult<null>> {
+export function deleteCampus(id: string): Promise<ApiResult<null>> {
   return request.delete(`/family/campuses/${id}`)
 }
 ```

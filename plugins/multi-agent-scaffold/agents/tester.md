@@ -17,6 +17,11 @@ model: sonnet
 - 测试命名：`{MethodName}_{Scenario}_{ExpectedResult}`
 - Mock 掉 SqlSugar 数据访问，不依赖真实数据库
 
+## 测试覆盖重点（新增）
+- **安全类**：未授权访问、权限提升、JWT 密钥校验、文件上传安全
+- **并发类**：CancellationToken 传递、并发更新冲突、唯一性约束
+- **前端健壮性**：空值防护、错误分类、.d.ts 运行时检查
+
 ## 工作方式
 1. 先读被测业务方法的实现和接口
 2. 用 xUnit + Moq（Mock SqlSugar 客户端） 的 mock 能力隔离依赖

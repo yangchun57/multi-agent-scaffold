@@ -57,10 +57,18 @@ WEB_CUSTOM_VUE = [
     ("README.md", "README.md"),
 ]
 
+# Rules 分发配置：始终加载的通用规则
+ALWAYS_RULES = ["workflow.md", "database.md", "git.md"]
+
 BACKENDS = {
     "dotnet": {
         "label": ".NET 8 + ASP.NET Core Web API + SqlSugar + MySQL + JWT",
         "standards": ["后端开发规范.md", "Excel导出功能规范.md"],
+        "rules": {
+            "backend-api.dotnet.md": "backend-api.md",
+            "backend-domain.dotnet.md": "backend-domain.md",
+            "backend-infra.dotnet.md": "backend-infra.md",
+        },
         "tokens": {
             "{{BACKEND_STACK}}": ".NET 8 + ASP.NET Core Web API + SqlSugar 5.x + MySQL 8.0 + JWT Bearer + Serilog + Swagger",
             "{{BACKEND_SHORT}}": ".NET 8",
@@ -78,6 +86,11 @@ BACKENDS = {
     "python": {
         "label": "Python 3.10+ + FastAPI + SQLAlchemy 2.0 + Pydantic v2",
         "standards": ["Python后台开发规范_v0.1.md"],
+        "rules": {
+            "backend-api.python.md": "backend-api.md",
+            "backend-domain.python.md": "backend-domain.md",
+            "backend-infra.python.md": "backend-infra.md",
+        },
         "tokens": {
             "{{BACKEND_STACK}}": "Python 3.10+ + FastAPI + SQLAlchemy 2.0 + Pydantic v2 + pydantic-settings + PyJWT + uvicorn + pytest",
             "{{BACKEND_SHORT}}": "Python (FastAPI)",
@@ -98,6 +111,10 @@ FRONTS = {
     "vue": {
         "label": "Vue 3 + Element Plus + Pinia + Vite + TS",
         "standards": ["前端开发规范.md"],
+        "rules": {
+            "frontend-pages.vue.md": "frontend-pages.md",
+            "frontend-state.vue.md": "frontend-state.md",
+        },
         "tokens": {
             "{{FRONTEND_STACK}}": "Vue 3（Composition API + `<script setup>`）+ Element Plus + Pinia + Vue Router + Axios + Vite + TypeScript",
             "{{FRONTEND_SHORT}}": "Vue 3 + Element Plus",
@@ -108,6 +125,10 @@ FRONTS = {
     "uniapp": {
         "label": "uni-app + Vue 3 + Pinia + TS（H5 + 微信小程序）",
         "standards": ["uni-app开发规范_v1.0.md", "移动端开发规范_v1.0.md"],
+        "rules": {
+            "frontend-pages.uniapp.md": "frontend-pages.md",
+            "frontend-state.uniapp.md": "frontend-state.md",
+        },
         "tokens": {
             "{{FRONTEND_STACK}}": "uni-app + Vue 3（Composition API）+ TypeScript + Pinia（H5 + 微信小程序，Vite 构建）",
             "{{FRONTEND_SHORT}}": "uni-app + Vue 3",
@@ -274,8 +295,8 @@ def copy_claude_rendered(target, mapping):
     src = os.path.join(TEMPLATE_DIR, ".claude")
     dst = os.path.join(target, ".claude")
     for entry in os.listdir(src):
-        if entry == "standards":
-            continue  # standards 按 profile 单独处理
+        if entry in ("standards", "rules"):
+            continue  # standards 按 profile 单独处理；rules 按技术栈由 copy_rules 处理
         s = os.path.join(src, entry)
         d = os.path.join(dst, entry)
         if entry in ("agents", "commands"):
@@ -292,6 +313,7 @@ def copy_claude_rendered(target, mapping):
 
 
 def copy_standards_subset(target, backend, frontend, override_dir):
+    """复制技术栈相关的 standards 文件到目标项目"""
     std_dir = os.path.join(target, ".claude", "standards")
     if override_dir and os.path.isdir(override_dir):
         copy_tree(override_dir, std_dir)
@@ -314,6 +336,52 @@ def copy_standards_subset(target, backend, frontend, override_dir):
     # 重生成 topics（只针对被选中的规范）
     if os.path.isfile(SPLIT_SCRIPT):
         run(["python", SPLIT_SCRIPT, std_dir], target, "生成规范 topics 索引")
+
+
+def copy_rules(target, backend, frontend, mapping):
+    """按技术栈复制并渲染 rules 文件到目标项目"""
+    rules_dir = os.path.join(target, ".claude", "rules")
+    os.makedirs(rules_dir, exist_ok=True)
+    
+    tpl_rules = os.path.join(TEMPLATE_DIR, ".claude", "rules")
+    copied = []
+    
+    # 1. 复制 _always 目录下的通用规则（始终加载）
+    always_src = os.path.join(tpl_rules, "_always")
+    if os.path.isdir(always_src):
+        for rule_file in ALWAYS_RULES:
+            src = os.path.join(always_src, rule_file)
+            if os.path.isfile(src):
+                dst = os.path.join(rules_dir, rule_file)
+                content = render(src, mapping)
+                write(dst, content)
+                copied.append(rule_file)
+    
+    # 2. 复制后端 rules（按技术栈选择）
+    backend_rules = BACKENDS[backend].get("rules", {})
+    backend_src = os.path.join(tpl_rules, "_backend")
+    if os.path.isdir(backend_src):
+        for src_name, dst_name in backend_rules.items():
+            src = os.path.join(backend_src, src_name)
+            if os.path.isfile(src):
+                dst = os.path.join(rules_dir, dst_name)
+                content = render(src, mapping)
+                write(dst, content)
+                copied.append(dst_name)
+    
+    # 3. 复制前端 rules（按技术栈选择）
+    frontend_rules = FRONTS[frontend].get("rules", {})
+    frontend_src = os.path.join(tpl_rules, "_frontend")
+    if os.path.isdir(frontend_src):
+        for src_name, dst_name in frontend_rules.items():
+            src = os.path.join(frontend_src, src_name)
+            if os.path.isfile(src):
+                dst = os.path.join(rules_dir, dst_name)
+                content = render(src, mapping)
+                write(dst, content)
+                copied.append(dst_name)
+    
+    print(f"  [OK] 生成 {len(copied)} 个 rules 文件（自动触发）：{', '.join(copied)}")
 
 
 # ============ 后端工程 ============
@@ -510,6 +578,9 @@ def main():
 
     # ===== standards 子集 + topics =====
     copy_standards_subset(target, backend, frontend, args.standards.strip())
+
+    # ===== rules 自动触发规则（按技术栈选择） =====
+    copy_rules(target, backend, frontend, mapping)
 
     # ===== 代码工程（按栈） =====
     print("\n[代码工程]")

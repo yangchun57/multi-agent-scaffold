@@ -22,11 +22,17 @@ model: sonnet
 ## 最高优先级约束
 严格遵守 CLAUDE.md 的最高优先级约束（字段映射、表结构约定）。
 
+## 建表前必读
+- **设计唯一性字段前**：读 `.claude/standards/topics/并发与资源管理规范/04-并发控制规范.md`（数据库唯一约束）
+- **设计多租户表前**：读 `.claude/standards/topics/安全编码规范/05-多租户数据隔离规范.md`（TenantId 字段、索引）
+- **设计并发更新表前**：读 `.claude/standards/topics/并发与资源管理规范/04-并发控制规范.md`（RowVersion 乐观锁字段）
+
 ## 工作方式
 1. 先读 architect 的设计草案和 CLAUDE.md
-2. 产出建表 SQL，同时更新 `docs/00-项目文档/database-design.md`
-3. 每个表都要写 COMMENT 注释（表注释 + 字段注释）
-4. 不确定字段类型或约束时，参考已有表的设计保持一致
+2. **根据表设计内容，读"建表前必读"中对应的规范文件**
+3. 产出建表 SQL，同时更新 `docs/00-项目文档/database-design.md`
+4. 每个表都要写 COMMENT 注释（表注释 + 字段注释）
+5. 不确定字段类型或约束时，参考已有表的设计保持一致
 
 ## 交付物格式
 - 迁移脚本：`sql/migrations/V{三位序号}__{描述}.sql`（在 API 工程下，版本化迁移，禁止裸 SQL、禁止手工改库，详见该目录 README）

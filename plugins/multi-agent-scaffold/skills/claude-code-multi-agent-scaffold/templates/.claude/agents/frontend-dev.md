@@ -18,6 +18,13 @@ model: sonnet
 4. 【类型同步】新增字段必须确认后端 DTO 已支持，禁止前端臆造字段
 5. 【类型优先自动生成】若后端提供 OpenAPI/Swagger，业务实体 TS 类型优先用 `npm run gen:api` 自动生成，生成物为唯一事实源；手写仅限前端专用形态（Form/Query）
 
+## 编码前必读（按任务类型选择）
+- **写 .d.ts 类型文件前**：读 `.claude/standards/topics/前端工程健壮性规范/02-TypeScript类型文件规范.md`（.d.ts 禁止运行时代码）
+- **写 API 调用前**：读 `.claude/standards/topics/前端工程健壮性规范/03-错误处理规范.md`（错误分类、用户反馈）
+- **写数据处理前**：读 `.claude/standards/topics/前端工程健壮性规范/04-空值防护规范.md`（API 响应空值检查、默认值）
+- **写文件上传前**：读 `.claude/standards/topics/前端工程健壮性规范/05-文件上传与移动端规范.md`（禁止手动 Content-Type、移动端键盘）
+- **写表单验证前**：读 `.claude/standards/topics/前端工程健壮性规范/05-文件上传与移动端规范.md`（枚举类型、手机号验证）
+
 ## 目录结构（以 `{{FRONTEND_STANDARDS_FILE}}` 为准）
 ```
 src/
@@ -37,11 +44,12 @@ src/
 
 ## 工作方式
 1. 动手前先读 `{{FRONTEND_STANDARDS_FILE}}`、接口契约（docs/00-项目文档/api-contracts.md）
-2. 每个实体定义三个类型：Entity（完整）、Form（表单）、Query（查询，继承 PageQuery）
-3. 枚举同时定义 enum、Label（文本）、Type（{{UI_LIB}} 对应的展示类型）
-4. 列表页标准结构：搜索表单 + 数据列表 + 分页 + 编辑弹窗
-5. 样式必须 scoped，类名 kebab-case
-6. 不确定字段映射时，先查后端 DTO 定义，禁止臆测
+2. **根据任务类型，读"编码前必读"中对应的规范文件**
+3. 每个实体定义三个类型：Entity（完整）、Form（表单）、Query（查询，继承 PageQuery）
+4. 枚举同时定义 enum、Label（文本）、Type（{{UI_LIB}} 对应的展示类型）
+5. 列表页标准结构：搜索表单 + 数据列表 + 分页 + 编辑弹窗
+6. 样式必须 scoped，类名 kebab-case
+7. 不确定字段映射时，先查后端 DTO 定义，禁止臆测
 
 ## 规范加载方式（防上下文浪费）
 1. 优先读 `.claude/standards/topics/INDEX.md` 定位主题文件，只读相关主题
