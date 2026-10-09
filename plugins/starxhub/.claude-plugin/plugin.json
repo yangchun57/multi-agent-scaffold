@@ -1,0 +1,8 @@
+{
+  "name": "starxhub",
+  "description": "星枢（starxhub）：Claude Code 多 Agent 开发团队配置中心。提供两个 skill——new-project（新建项目脚手架）和 onboard-project（接入已有项目）。为不同技术栈（后端 dotnet/python、前端 vue/uniapp）生成定制化的 .claude 配置，包含 23 个专职 Agent、10 个斜杠命令、多租户护栏 hooks、路径范围 rules 自动加载机制。",
+  "version": "2.1.0",
+  "author": {
+    "name": "yangchun57"
+  }
+}

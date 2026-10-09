@@ -1,6 +1,6 @@
 ---
-name: claude-code-multi-agent-scaffold
-description: Scaffolds a complete Claude Code multi-agent team project. Creates the .claude/ directory (23 role agents across 5 lifecycle phases, 10 slash commands, 2 guardrail hooks, path-scoped rules auto-loading, dev standards), CLAUDE.md, docs/00-项目文档, and a self-contained generator script with a configurable tech stack (backend dotnet|python, frontend vue|uniapp). Use when the user wants to set up a Claude Code multi-agent project, an AI engineering team, or an automated software-engineering workflow.
+name: new-project
+description: 新建项目脚手架。为指定技术栈生成完整的 Claude Code 多 Agent 团队配置，包含 24 个专职 Agent（5 阶段生命周期）、10 个斜杠命令、2 个护栏 hooks、路径范围 rules 自动加载、开发规范。生成 .claude/ 目录、CLAUDE.md、docs/00-项目文档，以及可配置的生成器脚本（后端 dotnet|python，前端 vue|uniapp）。当用户需要从零开始搭建一个多 Agent 协作项目时使用。
 ---
 
 # Claude Code Multi-Agent Team Scaffold
@@ -39,13 +39,14 @@ Generate a complete Claude Code multi-agent team covering the full software-engi
         └── web/               # Vue 3 前端骨架（业务无关）
 ```
 
-## Agent roster (23 agents, 5 phases)
+## Agent roster (24 agents, 5 phases)
 
 | Phase | Agent | Role | Model |
 |-------|-------|------|-------|
 | 需求分析 | requirement-analyst | 需求澄清、用户故事、验收标准 | opus |
 | 需求分析 | ux-researcher | 用户画像、用户旅程、竞品分析 | opus |
 | 需求分析 | product-designer | 信息架构、交互流程、设计规范 | opus |
+| 需求分析 | html-prototyper | HTML 原型制作、交互实现、视觉还原 | sonnet |
 | 任务规划 | pm | 需求拆解、任务计划、优先级 | opus |
 | 需求评审 | req-coordinator | 需求评审协调者，调度评审团队、汇总报告 | opus |
 | 需求评审 | req-quality-group-lead | 需求质量评审组长，调度质量专家和一致性专家 | opus |
@@ -67,7 +68,7 @@ Generate a complete Claude Code multi-agent team covering the full software-engi
 | 测试修复 | functional-tester | 功能测试用例设计（文档驱动 / 代码逆向） | opus |
 | 测试修复 | bug-fixer | Bug 复现、根因定位、最小修复、回归验证、知识沉淀 | opus |
 
-Flow: 模糊需求 → requirement-analyst → ux-researcher → product-designer → pm → req-coordinator（评审团队把关）→ 开发 agents → reviewer → functional-tester（用例）/ bug-fixer（修复）
+Flow: 模糊需求 → requirement-analyst → ux-researcher → product-designer → html-prototyper（HTML 原型）→ pm → req-coordinator（评审团队把关）→ 开发 agents → reviewer → functional-tester（用例）/ bug-fixer（修复）
 
 ### 需求评审团队拓扑
 
@@ -135,7 +136,7 @@ Rules:
 ## Skill layout
 
 ```
-claude-code-multi-agent-scaffold/
+new-project/
 ├── SKILL.md
 ├── .skill-metadata.yaml
 ├── templates/              ← 模板文件（可直接编辑，无需改脚本）
@@ -144,7 +145,7 @@ claude-code-multi-agent-scaffold/
 │   ├── .mcp.json
 │   ├── .gitignore
 │   ├── .claude/            ← agents/commands/hooks/rules/settings + standards
-│   │   ├── agents/         ← 23 个 Agent 模板（含 8 个需求评审 + 2 个方案门禁 + 2 个测试修复）
+│   │   ├── agents/         ← 24 个 Agent 模板（含 8 个需求评审 + 2 个方案门禁 + 2 个测试修复 + 1 个 HTML 原型）
 │   │   └── rules/          ← 13 个路径范围规则（_always 3 + _backend 6 + _frontend 4，按技术栈选择）
 │   ├── docs/00-项目文档/   ← 12 个文档模板
 │   ├── docs/README.md      ← 文档管理规范

@@ -1,9 +1,9 @@
 ---
-name: claude-code-project-onboard
-description: 将已有项目纳入 multi-agent 工作流。探测技术栈、重组目录结构（代码→src/、文档→docs/）、生成 .claude/ 配置和 CLAUDE.md。支持未知技术栈的骨架 rules 生成。
+name: onboard-project
+description: 接入已有项目到多 Agent 工作流。自动探测技术栈、重组目录结构（代码→src/、文档→docs/）、生成 .claude/ 配置和 CLAUDE.md。支持未知技术栈的骨架 rules 生成。当用户想让现有项目使用多 Agent 协作模式时使用。
 ---
 
-# Claude Code 项目接管（Onboard）
+# 项目接入（Onboard）— 星枢 starxhub
 
 ## 目的
 

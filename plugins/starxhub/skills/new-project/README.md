@@ -1,4 +1,4 @@
-# Claude Code 多 Agent 脚手架 Skill — 使用说明
+# 星枢（starxhub）— new-project skill 使用说明
 
 ## 快速上手：从初始化项目目录开始
 

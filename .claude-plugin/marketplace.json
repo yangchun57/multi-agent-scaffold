@@ -1,18 +1,18 @@
 {
-  "name": "multi-agent-scaffold",
+  "name": "starxhub",
   "owner": {
     "name": "yangchun57"
   },
   "metadata": {
-    "description": "Claude Code 多 Agent 项目脚手架生成器：按技术栈（dotnet/python × vue/uniapp）生成定制化 .claude 配置，含 23 Agent / 10 命令 / 护栏 hooks / 路径范围 rules 自动加载"
+    "description": "星枢（starxhub）：Claude Code 多 Agent 开发团队配置中心。按技术栈（dotnet/python × vue/uniapp）生成定制化 .claude 配置，含 23 Agent / 10 命令 / 护栏 hooks / 路径范围 rules 自动加载"
   },
   "plugins": [
     {
-      "name": "multi-agent-scaffold",
-      "source": "./plugins/multi-agent-scaffold",
-      "description": "项目脚手架生成器 skill，按技术栈生成定制化的 .claude 配置（23 Agent、10 命令、护栏 hooks、路径范围 rules）。仅用于新建项目，不支持已有项目。",
-      "version": "2.0.0"
+      "name": "starxhub",
+      "source": "./plugins/starxhub",
+      "description": "星枢（starxhub）：多 Agent 开发团队配置中心，提供两个 skill——new-project（新建项目脚手架）和 onboard-project（接入已有项目）。按技术栈生成定制化 .claude 配置（23 Agent、10 命令、护栏 hooks、路径范围 rules）。",
+      "version": "2.1.0"
     }
   ],
-  "version": "2.0.0"
+  "version": "2.1.0"
 }

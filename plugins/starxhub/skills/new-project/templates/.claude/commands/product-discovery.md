@@ -21,5 +21,13 @@ description: 产品发现与需求设计全流程（需求分析→用户研究�
 启动 product-designer，让它产出信息架构 → ia.md、交互流程 → flows.md、设计规范 → design-spec.md
 → 立即提交：`docs: 产品设计（IA/流程/规范）`
 
-## 第五步：汇总（主 Agent）
-主 Agent 向用户汇报：需求文档摘要、用户研究关键发现、设计产出清单、下一步建议。
+## 第五步：需求评审（启动 req-coordinator SubAgent）
+启动 req-coordinator，让它调度需求评审团队对 requirements.md 做质量评审和一致性检查
+→ 评审报告落盘后提交：`docs: 需求评审报告`
+
+**评审结果处理**：
+- 有阻塞项 → 启动 requirement-analyst 修复 → 重新评审（直到通过）
+- 无阻塞项 → 继续
+
+## 第六步：汇总（主 Agent）
+主 Agent 向用户汇报：需求文档摘要、用户研究关键发现、设计产出清单、评审结论、下一步建议。
