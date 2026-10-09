@@ -103,26 +103,24 @@ git commit -m "refactor: 迁移前端代码到 src/web/"
 
 #### Step 3: 生成 .claude/ + CLAUDE.md
 
-根据匹配度生成不同级别的 rules：
-
-**Level 1（完全匹配）**：使用预定义 rules 模板
-
-**Level 2（部分匹配）**：生成骨架 rules + 待补充清单
-
-**Level 3（不匹配）**：只生成通用 rules（workflow/database/git）
+运行 onboard.py 脚本，自动完成以下操作：
 
 ```bash
-# 复制 agents/commands/hooks
-cp -r templates/.claude/agents .claude/
-cp -r templates/.claude/commands .claude/
-cp -r templates/.claude/hooks .claude/
+python scripts/onboard.py <project-root> [--backend dotnet|python] [--frontend vue|uniapp]
+```
 
-# 生成 rules（按匹配度）
-# ...（由 Claude Code 根据探测结果动态生成）
+脚本会：
+1. 从 `../new-project/templates/` 复制 `.claude/` 配置（agents/commands/hooks/standards/settings.json）
+2. 根据探测结果生成 rules（通用规则 + 后端规则 + 前端规则）
+3. 从代码推断预填 CLAUDE.md
 
-# 生成 CLAUDE.md（从代码推断预填）
-# ...（由 Claude Code 根据探测结果动态生成）
+**匹配度策略**：
 
+- **Level 1（完全匹配）**：使用预定义 rules 模板，开箱即用
+- **Level 2（部分匹配）**：生成骨架 rules + 待补充清单
+- **Level 3（不匹配）**：只生成通用 rules（workflow/database/git）
+
+```bash
 # 提交
 git add .claude/ CLAUDE.md
 git commit -m "chore: 添加 multi-agent 配置"
